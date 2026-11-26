@@ -1,0 +1,354 @@
+{% extends "warning/base.html" %}
+{% load warning_tags %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- ══ Hero Header ══ -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+    <div>
+        <div class="stat-label mb-1">India Heat Risk Monitor</div>
+        <h1 class="mb-0" style="font-size:1.8rem;">
+            Regional <span class="gradient-text">Heat Risk</span> Overview
+        </h1>
+        <p class="mt-1 mb-0" style="color:var(--text-muted);font-size:.875rem;">
+            Live 7-day heatwave forecast for {{ total_locations }} monitored Indian cities
+        </p>
+    </div>
+    {% if user.is_staff %}
+    <form method="post" action="{% url 'refresh_data' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn-hw-primary">
+            <i class="bi bi-arrow-clockwise me-1"></i> Refresh Data
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<!-- ══ Stat Cards ══ -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="stat-card red">
+            <i class="bi bi-geo-alt stat-icon" style="color:var(--primary)"></i>
+            <div class="stat-label">Monitored Cities</div>
+            <div class="stat-value" style="color:var(--primary)">{{ total_locations }}</div>
+            <div class="stat-sub">Across India</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card orange">
+            <i class="bi bi-exclamation-triangle stat-icon" style="color:var(--secondary)"></i>
+            <div class="stat-label">At Danger+</div>
+            <div class="stat-value" style="color:var(--secondary)">
+                {{ risk_counts.DANGER|add:risk_counts.EXTREME_DANGER }}
+            </div>
+            <div class="stat-sub">Cities at critical risk</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card yellow">
+            <i class="bi bi-bell stat-icon" style="color:var(--accent)"></i>
+            <div class="stat-label">Active Alerts</div>
+            <div class="stat-value" style="color:var(--accent)">{{ total_active_alerts }}</div>
+            <div class="stat-sub">Heatwave warnings</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card green">
+            <i class="bi bi-check-circle stat-icon" style="color:var(--r-normal)"></i>
+            <div class="stat-label">Safe Cities</div>
+            <div class="stat-value" style="color:var(--r-normal)">{{ risk_counts.NORMAL }}</div>
+            <div class="stat-sub">Normal conditions</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Map ══ -->
+<div class="hw-card p-0 mb-4">
+    <div class="d-flex align-items-center justify-content-between px-3 py-2"
+        style="border-bottom:1px solid var(--border);">
+        <span class="section-title mb-0" style="font-size:.875rem;">
+            <i class="bi bi-map text-red"></i> Live Risk Map
+        </span>
+        <span style="font-size:.75rem;color:var(--text-muted);">
+            <i class="bi bi-info-circle me-1"></i>Click markers for details
+        </span>
+    </div>
+    <div class="map-wrapper"
+        style="border-radius: 0 0 var(--radius-lg) var(--radius-lg); border:none; position:relative;">
+        <div id="map" style="height:460px;width:100%;"></div>
+
+        <!-- Legend -->
+        <div class="map-legend-hw position-absolute" style="bottom:1.5rem;right:1rem;z-index:1000;min-width:140px;">
+            <div class="fw-bold mb-2"
+                style="font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Risk
+                Level</div>
+            <div class="leg-row"><span class="leg-dot" style="background:#2ecc71;"></span> Normal</div>
+            <div class="leg-row"><span class="leg-dot" style="background:#f1c40f;"></span> Caution</div>
+            <div class="leg-row"><span class="leg-dot" style="background:#e67e22;"></span> Extreme Caution</div>
+            <div class="leg-row"><span class="leg-dot" style="background:#e74c3c;"></span> Danger</div>
+            <div class="leg-row"><span class="leg-dot" style="background:#cc0000;"></span> Extreme Danger</div>
+            <div class="leg-row" style="border-top:1px solid var(--border);padding-top:.4rem;margin-top:.4rem;">
+                <span class="leg-dot" style="background:#3498db;"></span> Cooling Center
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ Active Alerts ══ -->
+<div class="hw-card p-0">
+    <div class="px-3 py-2" style="border-bottom:1px solid var(--border);">
+        <span class="section-title mb-0" style="font-size:.875rem;">
+            <i class="bi bi-bell-fill text-red"></i> Active Heatwave Alerts
+        </span>
+    </div>
+    <div class="p-3">
+        {% if active_alerts %}
+        <div class="table-responsive">
+            <table class="hw-table">
+                <thead>
+                    <tr>
+                        <th>City</th>
+                        <th>Risk Level</th>
+                        <th>Period</th>
+                        <th>Peak Heat Index</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alert in active_alerts %}
+                    <tr>
+                        <td><strong>{{ alert.location.name }}</strong>
+                            <br><span style="font-size:.75rem;color:var(--text-muted)">{{ alert.location.state_region
+                                }}</span>
+                        </td>
+                        <td><span class="risk-badge risk-{{ alert.level }}">{{ alert.level|risk_display }}</span></td>
+                        <td style="color:var(--text-muted);font-size:.82rem;">{{ alert.start_date }} → {{ alert.end_date
+                            }}</td>
+                        <td><strong style="color:var(--primary);">{{ alert.peak_heat_index }}°C</strong></td>
+                        <td><a href="{% url 'location_detail' alert.location.id %}"
+                                class="btn-hw-outline btn-hw-sm">View →</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-check2-circle" style="font-size:2.5rem;color:var(--r-normal);opacity:.7;"></i>
+            <p class="mt-2 mb-0" style="color:var(--text-muted);">
+                {% if total_locations == 0 %}
+                No data yet — run <code style="color:var(--primary);">python manage.py seed_locations</code> then <code
+                    style="color:var(--primary);">python manage.py fetch_forecasts</code>
+                {% else %}
+                No active heatwave alerts right now. All cities are safe. ✅
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ══ All Monitored Cities Live Overview ══ -->
+<div class="hw-card p-0 mt-4">
+    <div class="px-3 py-2 d-flex justify-content-between align-items-center"
+        style="border-bottom:1px solid var(--border);">
+        <span class="section-title mb-0" style="font-size:.875rem;">
+            <i class="bi bi-geo-alt-fill text-red"></i> Monitored Cities Live Overview ({{ map_data|length }})
+        </span>
+        <span style="font-size:0.75rem;color:var(--text-muted);">7-Day Open-Meteo Weather Forecasts</span>
+    </div>
+    <div class="p-3">
+        <div class="table-responsive">
+            <table class="hw-table">
+                <thead>
+                    <tr>
+                        <th>City & Region</th>
+                        <th>Current Risk</th>
+                        <th>Max Temp</th>
+                        <th>Peak Heat Index</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loc in map_data %}
+                    <tr>
+                        <td>
+                            <strong>{{ loc.name }}</strong>
+                            <br><span style="font-size:.75rem;color:var(--text-muted)">{{ loc.state }}</span>
+                        </td>
+                        <td><span class="risk-badge risk-{{ loc.risk }}">{{ loc.risk|risk_display }}</span></td>
+                        <td><strong>{{ loc.max_temp }}°C</strong></td>
+                        <td><strong style="color:{{ loc.color }};">{{ loc.peak_hi }}°C</strong></td>
+                        <td>
+                            <a href="{% url 'location_detail' loc.id %}" class="btn-hw-outline btn-hw-sm">
+                                7-Day Forecast →
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-3" style="color:var(--text-muted);">
+                            No locations configured.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{{ map_data|json_script:"map-data" }}
+{{ shelter_data|json_script:"shelter-data" }}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const mapEl = document.getElementById('map');
+    if (!mapEl) return;
+
+    let mapData = [];
+    let shelterData = [];
+    try {
+        const mapDataScript = document.getElementById('map-data');
+        if (mapDataScript && mapDataScript.textContent) {
+            mapData = JSON.parse(mapDataScript.textContent);
+        }
+    } catch (e) {
+        console.error('Error parsing map-data:', e);
+    }
+
+    try {
+        const shelterDataScript = document.getElementById('shelter-data');
+        if (shelterDataScript && shelterDataScript.textContent) {
+            shelterData = JSON.parse(shelterDataScript.textContent);
+        }
+    } catch (e) {
+        console.error('Error parsing shelter-data:', e);
+    }
+
+    // Initialize map centered on India
+    const map = L.map('map', { zoomControl: true }).setView([22.5, 79.5], 5);
+
+    // Free tile layers (No API key required)
+    const darkCanvas = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+        className: 'dark-tiles'
+    });
+
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles © Esri',
+        maxZoom: 18
+    });
+
+    const streetLayer = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+        maxZoom: 18
+    });
+
+    // Default to Dark Canvas
+    darkCanvas.addTo(map);
+
+    // City markers layer
+    const cityLayer = L.layerGroup();
+    if (Array.isArray(mapData)) {
+        mapData.forEach(function (loc) {
+            const circle = L.circleMarker([loc.lat, loc.lon], {
+                radius: 12,
+                fillColor: loc.color || '#2ecc71',
+                color: '#ffffff',
+                weight: 2,
+                opacity: 0.95,
+                fillOpacity: 0.85,
+            });
+
+            // City name tooltip directly under the marker dot
+            circle.bindTooltip('<b>' + loc.name + '</b>', {
+                permanent: true,
+                direction: 'bottom',
+                className: 'city-map-label',
+                offset: [0, 8]
+            });
+
+            circle.bindPopup(
+                '<div style="min-width:190px;font-family:Inter,sans-serif;">' +
+                '<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#8a8a9a;margin-bottom:.25rem;">' + (loc.state || '') + '</div>' +
+                '<div style="font-size:1.05rem;font-weight:700;color:#f0f0f0;margin-bottom:.6rem;">' + loc.name + '</div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
+                '<span style="color:#8a8a9a;font-size:.8rem;">Max Temperature</span>' +
+                '<span style="color:#f0f0f0;font-weight:600;">' + (loc.max_temp !== undefined ? loc.max_temp : loc.peak_hi) + '°C</span>' +
+                '</div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
+                '<span style="color:#8a8a9a;font-size:.8rem;">Peak Heat Index</span>' +
+                '<span style="color:' + loc.color + ';font-weight:700;">' + loc.peak_hi + '°C</span>' +
+                '</div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:.8rem;">' +
+                '<span style="color:#8a8a9a;font-size:.8rem;">Risk Level</span>' +
+                '<span style="font-size:.75rem;font-weight:700;color:' + loc.color + ';">' + (loc.risk || '').replace(/_/g, ' ') + '</span>' +
+                '</div>' +
+                '<a href="/location/' + loc.id + '/" style="display:block;text-align:center;background:linear-gradient(135deg,#e63946,#ff6b35);color:#fff;padding:.4rem .8rem;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:600;">View 7-Day Forecast →</a>' +
+                '</div>'
+            );
+
+            // Pulsing circle for danger cities
+            if (loc.risk === 'DANGER' || loc.risk === 'EXTREME_DANGER') {
+                const pulseCircle = L.circleMarker([loc.lat, loc.lon], {
+                    radius: 20,
+                    fillColor: loc.color,
+                    color: loc.color,
+                    weight: 1,
+                    opacity: 0.35,
+                    fillOpacity: 0.15,
+                });
+                cityLayer.addLayer(pulseCircle);
+            }
+
+            cityLayer.addLayer(circle);
+        });
+    }
+    cityLayer.addTo(map);
+
+    // Cooling centers layer
+    const shelterLayer = L.layerGroup();
+    const shelterIcon = L.divIcon({
+        className: '',
+        html: '<div style="width:24px;height:24px;background:#3498db;border-radius:50%;border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 0 10px rgba(52,152,219,0.5);">🏠</div>',
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+    });
+
+    if (Array.isArray(shelterData)) {
+        shelterData.forEach(function (s) {
+            const marker = L.marker([s.lat, s.lon], { icon: shelterIcon });
+            marker.bindPopup(
+                '<div style="font-family:Inter,sans-serif;">' +
+                '<div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;color:#f0f0f0;">🏠 ' + s.name + '</div>' +
+                '<div style="font-size:.78rem;color:#8a8a9a;">' + s.address + '</div>' +
+                '<div style="font-size:.75rem;color:#3498db;margin-top:.3rem;">Near ' + s.city + '</div>' +
+                '</div>'
+            );
+            shelterLayer.addLayer(marker);
+        });
+    }
+
+    // Layer controls
+    const baseMaps = {
+        '🌙 Dark Canvas': darkCanvas,
+        '🛰️ Satellite': satelliteLayer,
+        '🗺️ Standard Map': streetLayer
+    };
+    const overlayMaps = {
+        '🏠 Cooling Centers': shelterLayer
+    };
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false, position: 'topright' }).addTo(map);
+
+    // Force map to recalculate its container size
+    setTimeout(function() {
+        map.invalidateSize();
+    }, 200);
+});
+</script>
+{% endblock %}

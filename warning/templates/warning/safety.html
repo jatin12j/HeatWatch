@@ -1,0 +1,160 @@
+{% extends "warning/base.html" %}
+
+{% block title %}Heat Safety Guidelines{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <div class="stat-label mb-1">Disaster Management</div>
+    <h1 style="font-size:1.8rem;">Heat Safety <span class="gradient-text">Guidelines</span></h1>
+    <p style="color:var(--text-muted);font-size:.875rem;max-width:600px;">
+        Heat-related illness is preventable. Know the risk levels, warning signs, and life-saving actions.
+    </p>
+</div>
+
+<!-- Risk level cards -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-md-6 col-xl">
+        <div class="hw-card h-100" style="border-top:3px solid #2ecc71;">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#2ecc71;margin-bottom:.5rem;">Below 27°C HI</div>
+            <h5 style="color:#2ecc71;">✅ Normal</h5>
+            <ul class="mb-0 ps-3" style="color:var(--text-muted);font-size:.82rem;line-height:1.8;">
+                <li>Conditions are comfortable</li>
+                <li>Stay hydrated as general practice</li>
+                <li>Enjoy outdoor activities normally</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl">
+        <div class="hw-card h-100" style="border-top:3px solid #f1c40f;">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f1c40f;margin-bottom:.5rem;">27–32°C HI</div>
+            <h5 style="color:#f1c40f;">⚠️ Caution</h5>
+            <ul class="mb-0 ps-3" style="color:var(--text-muted);font-size:.82rem;line-height:1.8;">
+                <li>Fatigue possible with prolonged exposure</li>
+                <li>Drink water regularly</li>
+                <li>Take shade breaks outdoors</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl">
+        <div class="hw-card h-100" style="border-top:3px solid #e67e22;">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#e67e22;margin-bottom:.5rem;">32–39°C HI</div>
+            <h5 style="color:#e67e22;">🟠 Extreme Caution</h5>
+            <ul class="mb-0 ps-3" style="color:var(--text-muted);font-size:.82rem;line-height:1.8;">
+                <li>Heat cramps and exhaustion possible</li>
+                <li>Avoid strenuous work 12–4 PM</li>
+                <li>Wear light, loose-fitting clothing</li>
+                <li>Drink water every 15–20 minutes</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl">
+        <div class="hw-card h-100" style="border-top:3px solid #e74c3c;">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#e74c3c;margin-bottom:.5rem;">39–51°C HI</div>
+            <h5 style="color:#e74c3c;">🔴 Danger</h5>
+            <ul class="mb-0 ps-3" style="color:var(--text-muted);font-size:.82rem;line-height:1.8;">
+                <li><strong>Heat stroke is likely</strong></li>
+                <li>No outdoor activities 12–4 PM</li>
+                <li>Stay in AC/cooled spaces</li>
+                <li>Check on elderly & children</li>
+                <li>Never leave anyone in parked cars</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-xl">
+        <div class="hw-card h-100" style="border-top:3px solid #cc0000;">
+            <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#ff4444;margin-bottom:.5rem;">Above 51°C HI</div>
+            <h5 style="color:#ff4444;">⛔ Extreme Danger</h5>
+            <ul class="mb-0 ps-3" style="color:var(--text-muted);font-size:.82rem;line-height:1.8;">
+                <li><strong>HEAT STROKE IMMINENT</strong></li>
+                <li>STAY INDOORS at all costs</li>
+                <li>If outdoors — minutes only</li>
+                <li>Drink water constantly</li>
+                <li>Go to nearest cooling center</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Signs of illness -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="hw-card" style="border-left:3px solid #f1c40f;">
+            <h5 style="color:#f1c40f;"><i class="bi bi-thermometer me-2"></i>Signs of Heat Exhaustion</h5>
+            <ul class="ps-3" style="color:var(--text-muted);font-size:.875rem;line-height:1.8;">
+                <li>Heavy sweating, cold/pale/clammy skin</li>
+                <li>Fast, weak pulse</li>
+                <li>Nausea, vomiting, muscle cramps</li>
+                <li>Tiredness, dizziness, headache, fainting</li>
+            </ul>
+            <div class="hw-alert hw-alert-warning" style="font-size:.8rem;">
+                <i class="bi bi-info-circle"></i>
+                <span>Move to cool place, loosen clothes, sip water, apply cool cloths. Seek help if symptoms last over 1 hour.</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="hw-card" style="border-left:3px solid #e74c3c;">
+            <h5 style="color:#e74c3c;"><i class="bi bi-exclamation-octagon-fill me-2"></i>Signs of Heat Stroke <span style="font-size:.75rem;">(EMERGENCY)</span></h5>
+            <ul class="ps-3" style="color:var(--text-muted);font-size:.875rem;line-height:1.8;">
+                <li>Body temp above <strong style="color:var(--primary);">40°C (104°F)</strong></li>
+                <li>Hot, red, dry or damp skin — <strong>NO sweating</strong></li>
+                <li>Fast, strong pulse</li>
+                <li>Confusion, headache, loss of consciousness</li>
+            </ul>
+            <div class="hw-alert hw-alert-danger" style="font-size:.82rem;">
+                <i class="bi bi-telephone-fill"></i>
+                <div><strong>CALL 112 IMMEDIATELY!</strong><br>Apply cool cloths, cool bath. Do NOT give fluids if unconscious.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Emergency Numbers -->
+<div class="hw-card">
+    <div class="section-title"><i class="bi bi-telephone-fill text-red"></i> Emergency Numbers — India</div>
+    <div class="row g-3">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">🚨</div>
+                <div style="font-size:1.3rem;font-weight:800;color:var(--primary);font-family:'Space Grotesk',sans-serif;">112</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Emergency</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">🚑</div>
+                <div style="font-size:1.3rem;font-weight:800;color:var(--secondary);font-family:'Space Grotesk',sans-serif;">108</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Ambulance</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">🏥</div>
+                <div style="font-size:1.3rem;font-weight:800;color:#3498db;font-family:'Space Grotesk',sans-serif;">104</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Health Line</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">🌊</div>
+                <div style="font-size:1.3rem;font-weight:800;color:#9b59b6;font-family:'Space Grotesk',sans-serif;">1078</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">NDMA</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">👮</div>
+                <div style="font-size:1.3rem;font-weight:800;color:#1abc9c;font-family:'Space Grotesk',sans-serif;">100</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Police</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div style="text-align:center;padding:1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius);">
+                <div style="font-size:1.5rem;margin-bottom:.3rem;">🔥</div>
+                <div style="font-size:1.3rem;font-weight:800;color:var(--primary);font-family:'Space Grotesk',sans-serif;">101</div>
+                <div style="font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Fire</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "warning/base.html" %}
+{% load warning_tags %}
+
+{% block title %}Alert History{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <div class="stat-label mb-1">Heatwave Records</div>
+    <h1 style="font-size:1.8rem;">Alert <span class="gradient-text">History</span></h1>
+</div>
+
+<!-- Filter Card -->
+<div class="hw-card p-0 mb-4">
+    <div class="px-3 py-2" style="border-bottom:1px solid var(--border);">
+        <span class="section-title mb-0" style="font-size:.875rem;"><i class="bi bi-funnel text-red"></i> Filters</span>
+    </div>
+    <div class="p-3">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="hw-label">Location</label>
+                <select name="location" class="form-select">
+                    <option value="">All Locations</option>
+                    {% for loc in locations %}
+                    <option value="{{ loc.id }}" {% if form.location.value|stringformat:"s" == loc.id|stringformat:"s" %}selected{% endif %}>
+                        {{ loc.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="hw-label">Risk Level</label>
+                {{ form.level }}
+            </div>
+            <div class="col-md-2">
+                <label class="hw-label">From Date</label>
+                {{ form.date_from }}
+            </div>
+            <div class="col-md-2">
+                <label class="hw-label">To Date</label>
+                {{ form.date_to }}
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn-hw-primary">
+                    <i class="bi bi-search me-1"></i>Filter
+                </button>
+                <a href="{% url 'alerts_list' %}" class="btn-hw-outline">Clear</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Table -->
+<div class="hw-card p-0">
+    {% if page_obj %}
+    <div class="table-responsive">
+        <table class="hw-table">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Risk Level</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Peak HI</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alert in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url 'location_detail' alert.location.id %}" style="color:var(--text-primary);text-decoration:none;font-weight:600;">
+                            {{ alert.location.name }}
+                        </a>
+                        <br><span style="font-size:.72rem;color:var(--text-muted);">{{ alert.location.state_region }}</span>
+                    </td>
+                    <td><span class="risk-badge risk-{{ alert.level }}">{{ alert.level|risk_display }}</span></td>
+                    <td style="color:var(--text-muted);font-size:.82rem;">{{ alert.start_date }}</td>
+                    <td style="color:var(--text-muted);font-size:.82rem;">{{ alert.end_date }}</td>
+                    <td><strong style="color:var(--primary);">{{ alert.peak_heat_index }}°C</strong></td>
+                    <td>
+                        {% if alert.is_active %}
+                        <span style="display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .65rem;border-radius:50px;background:rgba(231,76,60,.12);border:1px solid rgba(231,76,60,.3);color:var(--r-danger);font-size:.72rem;font-weight:700;">
+                            <span style="width:5px;height:5px;border-radius:50%;background:var(--r-danger);animation:pulse 1.5s infinite;"></span> Active
+                        </span>
+                        {% else %}
+                        <span style="padding:.25rem .65rem;border-radius:50px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-dim);font-size:.72rem;font-weight:700;">Expired</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div class="p-3" style="border-top:1px solid var(--border);">
+        <div class="hw-pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"><i class="bi bi-chevron-left"></i></a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <a href="?page={{ num }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" class="{% if page_obj.number == num %}active{% endif %}">{{ num }}</a>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% for k,v in request.GET.items %}{% if k != 'page' %}&{{ k }}={{ v }}{% endif %}{% endfor %}"><i class="bi bi-chevron-right"></i></a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-bell-slash" style="font-size:2.5rem;color:var(--text-dim);"></i>
+        <p class="mt-2" style="color:var(--text-muted);">No alerts found matching your filters.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+</style>
+{% endblock %}

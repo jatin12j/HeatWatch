@@ -1,0 +1,89 @@
+{% extends "warning/base.html" %}
+{% load warning_tags %}
+
+{% block title %}My Subscriptions{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <div class="stat-label mb-1">Alert Management</div>
+    <h1 style="font-size:1.8rem;">My <span class="gradient-text">Subscriptions</span></h1>
+    <p style="color:var(--text-muted);font-size:.875rem;">Get email alerts when heatwaves are forecast for cities you care about.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="hw-card p-0">
+            <div class="px-3 py-2" style="border-bottom:1px solid var(--border);">
+                <span class="section-title mb-0" style="font-size:.875rem;">
+                    <i class="bi bi-bookmark-heart text-red"></i> Active Subscriptions
+                </span>
+            </div>
+            {% if subscriptions %}
+            <div class="table-responsive">
+                <table class="hw-table">
+                    <thead>
+                        <tr>
+                            <th>City</th>
+                            <th>Min Alert Level</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sub in subscriptions %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'location_detail' sub.location.id %}" style="color:var(--text-primary);text-decoration:none;font-weight:600;">
+                                    {{ sub.location.name }}
+                                </a>
+                                <br><span style="font-size:.72rem;color:var(--text-muted);">{{ sub.location.state_region }}</span>
+                            </td>
+                            <td><span class="risk-badge risk-{{ sub.min_level }}">{{ sub.min_level|risk_display }}</span></td>
+                            <td class="text-end">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="remove">
+                                    <input type="hidden" name="subscription_id" value="{{ sub.id }}">
+                                    <button type="submit" class="btn-hw-outline btn-hw-sm" style="color:var(--primary);border-color:rgba(230,57,70,.3);">
+                                        <i class="bi bi-trash3 me-1"></i>Remove
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-bookmark-plus" style="font-size:2.5rem;color:var(--text-dim);"></i>
+                <p class="mt-2" style="color:var(--text-muted);">No subscriptions yet. Add one on the right!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Add Subscription -->
+    <div class="col-lg-4">
+        <div class="hw-card">
+            <div class="section-title">
+                <i class="bi bi-plus-circle text-red"></i> Add Subscription
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add">
+                <div class="mb-3">
+                    <label class="hw-label">City</label>
+                    {{ form.location }}
+                </div>
+                <div class="mb-4">
+                    <label class="hw-label">Min Alert Level</label>
+                    {{ form.min_level }}
+                </div>
+                <button type="submit" class="btn-hw-primary w-100" style="border-radius:var(--radius);">
+                    <i class="bi bi-bookmark-heart me-1"></i> Subscribe
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

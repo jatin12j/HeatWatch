@@ -1,0 +1,72 @@
+{% extends "warning/base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="min-height:70vh;">
+    <div style="width:100%;max-width:460px;">
+
+        <!-- Logo -->
+        <div class="text-center mb-4">
+            <div style="width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--secondary));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 1rem;box-shadow:0 0 32px var(--primary-glow);">🔥</div>
+            <h2 class="mb-1">Create Account</h2>
+            <p style="color:var(--text-muted);font-size:.875rem;">Join HeatWatch to subscribe to city alerts</p>
+        </div>
+
+        <div class="hw-card">
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="hw-alert hw-alert-danger mb-3">
+                    <i class="bi bi-x-circle"></i>
+                    <span>{% for e in form.non_field_errors %}{{ e }}{% endfor %}</span>
+                </div>
+                {% endif %}
+
+                <div class="mb-3">
+                    <label class="hw-label">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div style="color:var(--primary);font-size:.78rem;margin-top:.3rem;">{{ form.username.errors.0 }}</div>{% endif %}
+                    {% if form.username.help_text %}<div style="color:var(--text-dim);font-size:.72rem;margin-top:.3rem;">{{ form.username.help_text }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="hw-label">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div style="color:var(--primary);font-size:.78rem;margin-top:.3rem;">{{ form.email.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="hw-label">Group Type</label>
+                    {{ form.group_type }}
+                    <div style="color:var(--text-dim);font-size:.72rem;margin-top:.3rem;">
+                        <i class="bi bi-info-circle me-1"></i>Vulnerable groups get 3°C earlier warnings
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="hw-label">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<div style="color:var(--primary);font-size:.78rem;margin-top:.3rem;">{{ form.password1.errors.0 }}</div>{% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label class="hw-label">Confirm Password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<div style="color:var(--primary);font-size:.78rem;margin-top:.3rem;">{{ form.password2.errors.0 }}</div>{% endif %}
+                </div>
+
+                <button type="submit" class="btn-hw-primary w-100" style="border-radius:var(--radius);padding:.8rem;font-size:.95rem;">
+                    Create Account
+                </button>
+            </form>
+
+            <div class="text-center mt-3" style="font-size:.82rem;color:var(--text-dim);">
+                Already have an account?
+                <a href="{% url 'login' %}" style="color:var(--primary);text-decoration:none;font-weight:600;">Login here</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
