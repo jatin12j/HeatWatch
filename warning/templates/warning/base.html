@@ -656,6 +656,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
             white-space: nowrap !important;
         }
+
         .city-map-label::before {
             display: none !important;
         }
@@ -797,13 +798,7 @@
             }
         }
 
-            {
-            % block extra_css %
-        }
-
-            {
-            % endblock %
-        }
+        {% block extra_css %}{% endblock %}
     </style>
 </head>
 
@@ -813,13 +808,18 @@
     <nav class="navbar-hw">
         <div class="container-fluid d-flex align-items-center">
             <!-- Brand -->
-            <a href="{% url 'dashboard' %}" class="navbar-brand me-4">
+            <a href="{% url 'landing' %}" class="navbar-brand me-4">
                 <span class="brand-icon">🔥</span>
                 HeatWatch
             </a>
 
             <!-- Left nav links -->
             <ul class="nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'landing' %}">
+                        <i class="bi bi-house"></i> Home
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <i class="bi bi-grid-1x2"></i> Dashboard

@@ -33,6 +33,32 @@ from .services.indices import (
 
 
 # ══════════════════════════════════════════════
+# Landing Page / Front Gateway
+# ══════════════════════════════════════════════
+
+def landing_page(request):
+    """
+    Creative front page / landing gateway for HeatWatch.
+
+    Explains the system's purpose, thermal biometeorology science,
+    key features, and provides a direct gateway to Sign In, Sign Up,
+    or explore the Live Dashboard.
+    """
+    total_locations = Location.objects.count()
+    active_alerts_count = Alert.objects.filter(is_active=True).count()
+    shelters_count = ShelterLocation.objects.count()
+    preview_cities = Location.objects.all()[:6]
+
+    context = {
+        'total_locations': total_locations,
+        'active_alerts_count': active_alerts_count,
+        'shelters_count': shelters_count,
+        'preview_cities': preview_cities,
+    }
+    return render(request, 'warning/landing.html', context)
+
+
+# ══════════════════════════════════════════════
 # Dashboard
 # ══════════════════════════════════════════════
 

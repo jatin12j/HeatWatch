@@ -314,8 +314,12 @@ class ViewTests(TestCase):
         )
         UserProfile.objects.create(user=self.user, group_type='GENERAL')
 
-    def test_dashboard_200(self):
+    def test_landing_page_200(self):
         response = self.client.get('/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_dashboard_200(self):
+        response = self.client.get('/dashboard/')
         self.assertEqual(response.status_code, 200)
 
     def test_location_detail_200(self):

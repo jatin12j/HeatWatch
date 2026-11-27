@@ -125,3 +125,4 @@ class Command(BaseCommand):
             f'To restore real live winter weather anytime, run:\n'
             f'  python manage.py simulate_heatwave --reset\n'
         ))
+

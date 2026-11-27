@@ -5,8 +5,11 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
+    # ── Landing / Front Page Gateway ──
+    path('', views.landing_page, name='landing'),
+
     # ── Dashboard ──
-    path('', views.dashboard, name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 
     # ── Location detail and actions ──
     path('location/<int:pk>/', views.location_detail, name='location_detail'),

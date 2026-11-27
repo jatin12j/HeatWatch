@@ -205,150 +205,150 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const mapEl = document.getElementById('map');
-    if (!mapEl) return;
+    document.addEventListener('DOMContentLoaded', function () {
+        const mapEl = document.getElementById('map');
+        if (!mapEl) return;
 
-    let mapData = [];
-    let shelterData = [];
-    try {
-        const mapDataScript = document.getElementById('map-data');
-        if (mapDataScript && mapDataScript.textContent) {
-            mapData = JSON.parse(mapDataScript.textContent);
-        }
-    } catch (e) {
-        console.error('Error parsing map-data:', e);
-    }
-
-    try {
-        const shelterDataScript = document.getElementById('shelter-data');
-        if (shelterDataScript && shelterDataScript.textContent) {
-            shelterData = JSON.parse(shelterDataScript.textContent);
-        }
-    } catch (e) {
-        console.error('Error parsing shelter-data:', e);
-    }
-
-    // Initialize map centered on India
-    const map = L.map('map', { zoomControl: true }).setView([22.5, 79.5], 5);
-
-    // Free tile layers (No API key required)
-    const darkCanvas = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 18,
-        className: 'dark-tiles'
-    });
-
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles © Esri',
-        maxZoom: 18
-    });
-
-    const streetLayer = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 18
-    });
-
-    // Default to Dark Canvas
-    darkCanvas.addTo(map);
-
-    // City markers layer
-    const cityLayer = L.layerGroup();
-    if (Array.isArray(mapData)) {
-        mapData.forEach(function (loc) {
-            const circle = L.circleMarker([loc.lat, loc.lon], {
-                radius: 12,
-                fillColor: loc.color || '#2ecc71',
-                color: '#ffffff',
-                weight: 2,
-                opacity: 0.95,
-                fillOpacity: 0.85,
-            });
-
-            // City name tooltip directly under the marker dot
-            circle.bindTooltip('<b>' + loc.name + '</b>', {
-                permanent: true,
-                direction: 'bottom',
-                className: 'city-map-label',
-                offset: [0, 8]
-            });
-
-            circle.bindPopup(
-                '<div style="min-width:190px;font-family:Inter,sans-serif;">' +
-                '<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#8a8a9a;margin-bottom:.25rem;">' + (loc.state || '') + '</div>' +
-                '<div style="font-size:1.05rem;font-weight:700;color:#f0f0f0;margin-bottom:.6rem;">' + loc.name + '</div>' +
-                '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
-                '<span style="color:#8a8a9a;font-size:.8rem;">Max Temperature</span>' +
-                '<span style="color:#f0f0f0;font-weight:600;">' + (loc.max_temp !== undefined ? loc.max_temp : loc.peak_hi) + '°C</span>' +
-                '</div>' +
-                '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
-                '<span style="color:#8a8a9a;font-size:.8rem;">Peak Heat Index</span>' +
-                '<span style="color:' + loc.color + ';font-weight:700;">' + loc.peak_hi + '°C</span>' +
-                '</div>' +
-                '<div style="display:flex;justify-content:space-between;margin-bottom:.8rem;">' +
-                '<span style="color:#8a8a9a;font-size:.8rem;">Risk Level</span>' +
-                '<span style="font-size:.75rem;font-weight:700;color:' + loc.color + ';">' + (loc.risk || '').replace(/_/g, ' ') + '</span>' +
-                '</div>' +
-                '<a href="/location/' + loc.id + '/" style="display:block;text-align:center;background:linear-gradient(135deg,#e63946,#ff6b35);color:#fff;padding:.4rem .8rem;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:600;">View 7-Day Forecast →</a>' +
-                '</div>'
-            );
-
-            // Pulsing circle for danger cities
-            if (loc.risk === 'DANGER' || loc.risk === 'EXTREME_DANGER') {
-                const pulseCircle = L.circleMarker([loc.lat, loc.lon], {
-                    radius: 20,
-                    fillColor: loc.color,
-                    color: loc.color,
-                    weight: 1,
-                    opacity: 0.35,
-                    fillOpacity: 0.15,
-                });
-                cityLayer.addLayer(pulseCircle);
+        let mapData = [];
+        let shelterData = [];
+        try {
+            const mapDataScript = document.getElementById('map-data');
+            if (mapDataScript && mapDataScript.textContent) {
+                mapData = JSON.parse(mapDataScript.textContent);
             }
+        } catch (e) {
+            console.error('Error parsing map-data:', e);
+        }
 
-            cityLayer.addLayer(circle);
+        try {
+            const shelterDataScript = document.getElementById('shelter-data');
+            if (shelterDataScript && shelterDataScript.textContent) {
+                shelterData = JSON.parse(shelterDataScript.textContent);
+            }
+        } catch (e) {
+            console.error('Error parsing shelter-data:', e);
+        }
+
+        // Initialize map centered on India
+        const map = L.map('map', { zoomControl: true }).setView([22.5, 79.5], 5);
+
+        // Free tile layers (No API key required)
+        const darkCanvas = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+            className: 'dark-tiles'
         });
-    }
-    cityLayer.addTo(map);
 
-    // Cooling centers layer
-    const shelterLayer = L.layerGroup();
-    const shelterIcon = L.divIcon({
-        className: '',
-        html: '<div style="width:24px;height:24px;background:#3498db;border-radius:50%;border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 0 10px rgba(52,152,219,0.5);">🏠</div>',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
+        const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles © Esri',
+            maxZoom: 18
+        });
+
+        const streetLayer = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+            maxZoom: 18
+        });
+
+        // Default to Dark Canvas
+        darkCanvas.addTo(map);
+
+        // City markers layer
+        const cityLayer = L.layerGroup();
+        if (Array.isArray(mapData)) {
+            mapData.forEach(function (loc) {
+                const circle = L.circleMarker([loc.lat, loc.lon], {
+                    radius: 12,
+                    fillColor: loc.color || '#2ecc71',
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 0.95,
+                    fillOpacity: 0.85,
+                });
+
+                // City name tooltip directly under the marker dot
+                circle.bindTooltip('<b>' + loc.name + '</b>', {
+                    permanent: true,
+                    direction: 'bottom',
+                    className: 'city-map-label',
+                    offset: [0, 8]
+                });
+
+                circle.bindPopup(
+                    '<div style="min-width:190px;font-family:Inter,sans-serif;">' +
+                    '<div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#8a8a9a;margin-bottom:.25rem;">' + (loc.state || '') + '</div>' +
+                    '<div style="font-size:1.05rem;font-weight:700;color:#f0f0f0;margin-bottom:.6rem;">' + loc.name + '</div>' +
+                    '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
+                    '<span style="color:#8a8a9a;font-size:.8rem;">Max Temperature</span>' +
+                    '<span style="color:#f0f0f0;font-weight:600;">' + (loc.max_temp !== undefined ? loc.max_temp : loc.peak_hi) + '°C</span>' +
+                    '</div>' +
+                    '<div style="display:flex;justify-content:space-between;margin-bottom:.3rem;">' +
+                    '<span style="color:#8a8a9a;font-size:.8rem;">Peak Heat Index</span>' +
+                    '<span style="color:' + loc.color + ';font-weight:700;">' + loc.peak_hi + '°C</span>' +
+                    '</div>' +
+                    '<div style="display:flex;justify-content:space-between;margin-bottom:.8rem;">' +
+                    '<span style="color:#8a8a9a;font-size:.8rem;">Risk Level</span>' +
+                    '<span style="font-size:.75rem;font-weight:700;color:' + loc.color + ';">' + (loc.risk || '').replace(/_/g, ' ') + '</span>' +
+                    '</div>' +
+                    '<a href="/location/' + loc.id + '/" style="display:block;text-align:center;background:linear-gradient(135deg,#e63946,#ff6b35);color:#fff;padding:.4rem .8rem;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:600;">View 7-Day Forecast →</a>' +
+                    '</div>'
+                );
+
+                // Pulsing circle for danger cities
+                if (loc.risk === 'DANGER' || loc.risk === 'EXTREME_DANGER') {
+                    const pulseCircle = L.circleMarker([loc.lat, loc.lon], {
+                        radius: 20,
+                        fillColor: loc.color,
+                        color: loc.color,
+                        weight: 1,
+                        opacity: 0.35,
+                        fillOpacity: 0.15,
+                    });
+                    cityLayer.addLayer(pulseCircle);
+                }
+
+                cityLayer.addLayer(circle);
+            });
+        }
+        cityLayer.addTo(map);
+
+        // Cooling centers layer
+        const shelterLayer = L.layerGroup();
+        const shelterIcon = L.divIcon({
+            className: '',
+            html: '<div style="width:24px;height:24px;background:#3498db;border-radius:50%;border:2px solid rgba(255,255,255,0.7);display:flex;align-items:center;justify-content:center;font-size:12px;box-shadow:0 0 10px rgba(52,152,219,0.5);">🏠</div>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12],
+        });
+
+        if (Array.isArray(shelterData)) {
+            shelterData.forEach(function (s) {
+                const marker = L.marker([s.lat, s.lon], { icon: shelterIcon });
+                marker.bindPopup(
+                    '<div style="font-family:Inter,sans-serif;">' +
+                    '<div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;color:#f0f0f0;">🏠 ' + s.name + '</div>' +
+                    '<div style="font-size:.78rem;color:#8a8a9a;">' + s.address + '</div>' +
+                    '<div style="font-size:.75rem;color:#3498db;margin-top:.3rem;">Near ' + s.city + '</div>' +
+                    '</div>'
+                );
+                shelterLayer.addLayer(marker);
+            });
+        }
+
+        // Layer controls
+        const baseMaps = {
+            '🌙 Dark Canvas': darkCanvas,
+            '🛰️ Satellite': satelliteLayer,
+            '🗺️ Standard Map': streetLayer
+        };
+        const overlayMaps = {
+            '🏠 Cooling Centers': shelterLayer
+        };
+        L.control.layers(baseMaps, overlayMaps, { collapsed: false, position: 'topright' }).addTo(map);
+
+        // Force map to recalculate its container size
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 200);
     });
-
-    if (Array.isArray(shelterData)) {
-        shelterData.forEach(function (s) {
-            const marker = L.marker([s.lat, s.lon], { icon: shelterIcon });
-            marker.bindPopup(
-                '<div style="font-family:Inter,sans-serif;">' +
-                '<div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;color:#f0f0f0;">🏠 ' + s.name + '</div>' +
-                '<div style="font-size:.78rem;color:#8a8a9a;">' + s.address + '</div>' +
-                '<div style="font-size:.75rem;color:#3498db;margin-top:.3rem;">Near ' + s.city + '</div>' +
-                '</div>'
-            );
-            shelterLayer.addLayer(marker);
-        });
-    }
-
-    // Layer controls
-    const baseMaps = {
-        '🌙 Dark Canvas': darkCanvas,
-        '🛰️ Satellite': satelliteLayer,
-        '🗺️ Standard Map': streetLayer
-    };
-    const overlayMaps = {
-        '🏠 Cooling Centers': shelterLayer
-    };
-    L.control.layers(baseMaps, overlayMaps, { collapsed: false, position: 'topright' }).addTo(map);
-
-    // Force map to recalculate its container size
-    setTimeout(function() {
-        map.invalidateSize();
-    }, 200);
-});
 </script>
 {% endblock %}
