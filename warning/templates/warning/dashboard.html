@@ -229,8 +229,12 @@
             console.error('Error parsing shelter-data:', e);
         }
 
-        // Initialize map centered on India
-        const map = L.map('map', { zoomControl: true }).setView([22.5, 79.5], 5);
+        // Initialize map and fit all monitored cities into view
+        const map = L.map('map', { zoomControl: true }).setView([15.0, 95.0], 3);
+        if (Array.isArray(mapData) && mapData.length > 0) {
+            const bounds = L.latLngBounds(mapData.map(function (l) { return [l.lat, l.lon]; }));
+            map.fitBounds(bounds, { padding: [45, 45], maxZoom: 5 });
+        }
 
         // Free tile layers (No API key required)
         const darkCanvas = L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {

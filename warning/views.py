@@ -62,6 +62,7 @@ def landing_page(request):
 # Dashboard
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def dashboard(request):
     """
     Main dashboard view with an interactive map and risk summary.
@@ -145,6 +146,7 @@ def dashboard(request):
 # Location Detail
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def location_detail(request, pk):
     """
     Detailed view for a single location with charts and forecast data.
@@ -252,6 +254,7 @@ def location_detail(request, pk):
 # Heat Risk Calculator
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def calculator(request):
     """
     Interactive heat risk calculator.
@@ -297,6 +300,7 @@ def calculator(request):
 # Alerts
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def alerts_list(request):
     """
     Paginated list of all alerts with optional filters.
@@ -468,6 +472,7 @@ def unsubscribe_location(request, pk):
 # Safety Tips
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def safety_tips(request):
     """Static safety tips page organized by risk level."""
     return render(request, 'warning/safety.html', {
@@ -479,6 +484,7 @@ def safety_tips(request):
 # CSV Export
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def export_csv(request, pk):
     """
     Export forecast data for a location as a downloadable CSV file.
@@ -517,6 +523,7 @@ def export_csv(request, pk):
 # JSON API Endpoints
 # ══════════════════════════════════════════════
 
+@login_required(login_url='login')
 def api_locations(request):
     """
     JSON API: list all locations with their peak risk.
@@ -545,6 +552,7 @@ def api_locations(request):
     return JsonResponse({'locations': data})
 
 
+@login_required(login_url='login')
 def api_location_forecast(request, pk):
     """JSON API: forecast data for a single location."""
     location = get_object_or_404(Location, pk=pk)

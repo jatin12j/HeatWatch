@@ -97,6 +97,28 @@ CITIES = [
         'state_region': 'Maharashtra',
         'population_note': 'Education hub, 3M+',
     },
+    # 3 real hot global cities (Southern Hemisphere / Equatorial summer heat)
+    {
+        'name': 'Alice Springs',
+        'latitude': -23.6980,
+        'longitude': 133.8807,
+        'state_region': 'Australia (NT)',
+        'population_note': 'Outback desert hub, extreme summer heat',
+    },
+    {
+        'name': 'Darwin',
+        'latitude': -12.4634,
+        'longitude': 130.8456,
+        'state_region': 'Australia (NT)',
+        'population_note': 'Tropical northern coast, high humidity',
+    },
+    {
+        'name': 'Jakarta',
+        'latitude': -6.2088,
+        'longitude': 106.8456,
+        'state_region': 'Indonesia',
+        'population_note': 'Equatorial megacity, 10M+',
+    },
 ]
 
 # Sample cooling centers near major cities

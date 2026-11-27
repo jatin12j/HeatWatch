@@ -77,71 +77,50 @@
                 </div>
 
                 {% else %}
-                <!-- 3 Gateway Options for Guests & Users -->
-                <div class="row g-4 text-start">
+                <!-- 2 Unique Auth Gateway Options (Login / Sign Up Required) -->
+                <div class="row g-4 text-start justify-content-center">
                     <!-- Option 1: Create Account (Sign Up) -->
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card h-100 p-4 border-0 gateway-card"
-                            style="background: linear-gradient(160deg, #181824 0%, #10101a 100%); border: 1px solid rgba(255, 107, 53, 0.3) !important; border-radius: 18px; transition: transform 0.25s, border-color 0.25s;">
+                            style="background: linear-gradient(160deg, #1b1724 0%, #10101a 100%); border: 1px solid rgba(255, 107, 53, 0.4) !important; border-radius: 20px; transition: transform 0.25s, border-color 0.25s;">
                             <div class="d-flex align-items-center justify-content-between mb-3">
-                                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255, 107, 53, 0.15); display: flex; align-items: center; justify-content: center; color: #ff6b35; font-size: 1.3rem;">
-                                    <i class="bi bi-person-plus-fill"></i>
+                                <div style="width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(255, 107, 53, 0.25), rgba(255, 209, 102, 0.15)); display: flex; align-items: center; justify-content: center; color: #ffd166; font-size: 1.4rem;">
+                                    <i class="bi bi-rocket-takeoff-fill"></i>
                                 </div>
-                                <span class="badge rounded-pill bg-warning text-dark fw-bold" style="font-size: 0.68rem; padding: 4px 8px;">RECOMMENDED</span>
+                                <span class="badge rounded-pill bg-warning text-dark fw-bold" style="font-size: 0.7rem; padding: 5px 10px;">NEW TO HEATWATCH</span>
                             </div>
-                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">Create Free Account</h4>
-                            <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.6; color: #9494a8 !important;">
-                                Sign up to personalize your vulnerability profile (Elderly, Child, Outdoor Worker), set custom alert thresholds, and subscribe to cities.
+                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Create Free Account</h4>
+                            <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.65; color: #a0a0b6 !important;">
+                                Register to unlock the live geospatial risk map, 168-hour forecasts, thermal stress calculator, and personalized vulnerability alerts.
                             </p>
-                            <a href="{% url 'signup' %}" class="btn btn-warning w-100 fw-bold py-2 rounded-3"
-                                style="background: linear-gradient(135deg, #ff6b35, #ffd166); border: none; color: #0a0a0f;">
-                                Sign Up Now <i class="bi bi-arrow-right ms-1"></i>
+                            <a href="{% url 'signup' %}" class="btn w-100 fw-bold py-2 rounded-pill d-inline-flex align-items-center justify-content-center gap-2"
+                                style="background: linear-gradient(135deg, #ff6b35, #ffd166); border: none; color: #0a0a0f; box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);">
+                                <i class="bi bi-person-plus-fill"></i> Create Account & Enter <i class="bi bi-arrow-right"></i>
                             </a>
                         </div>
                     </div>
 
                     <!-- Option 2: Sign In (Login) -->
-                    <div class="col-md-4">
+                    <div class="col-md-5">
                         <div class="card h-100 p-4 border-0 gateway-card"
-                            style="background: linear-gradient(160deg, #181824 0%, #10101a 100%); border: 1px solid rgba(230, 57, 70, 0.3) !important; border-radius: 18px; transition: transform 0.25s, border-color 0.25s;">
+                            style="background: linear-gradient(160deg, #1b1520 0%, #10101a 100%); border: 1px solid rgba(230, 57, 70, 0.4) !important; border-radius: 20px; transition: transform 0.25s, border-color 0.25s;">
                             <div class="d-flex align-items-center justify-content-between mb-3">
-                                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(230, 57, 70, 0.15); display: flex; align-items: center; justify-content: center; color: #e63946; font-size: 1.3rem;">
-                                    <i class="bi bi-box-arrow-in-right"></i>
+                                <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(230, 57, 70, 0.18); display: flex; align-items: center; justify-content: center; color: #ff6b6b; font-size: 1.4rem;">
+                                    <i class="bi bi-shield-lock-fill"></i>
                                 </div>
-                                <span class="badge rounded-pill bg-danger-subtle text-danger fw-semibold" style="font-size: 0.68rem; padding: 4px 8px;">MEMBERS</span>
+                                <span class="badge rounded-pill bg-danger-subtle text-danger fw-semibold" style="font-size: 0.7rem; padding: 5px 10px;">REGISTERED MEMBERS</span>
                             </div>
-                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">Sign In to Account</h4>
-                            <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.6; color: #9494a8 !important;">
-                                Already have an account? Log in to manage your monitored locations, email notification preferences, and saved dashboard filters.
+                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.3rem;">Sign In to Access</h4>
+                            <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.65; color: #a0a0b6 !important;">
+                                Already registered? Sign in to access the live risk dashboard, city weather analytics, active alerts, and your subscriptions.
                             </p>
-                            <a href="{% url 'login' %}?next={% url 'dashboard' %}" class="btn btn-outline-danger w-100 fw-bold py-2 rounded-3 text-white"
-                                style="border-color: rgba(230, 57, 70, 0.6); background: rgba(230, 57, 70, 0.12);">
-                                Sign In <i class="bi bi-box-arrow-in-right ms-1"></i>
+                            <a href="{% url 'login' %}?next={% url 'dashboard' %}" class="btn w-100 fw-bold py-2 rounded-pill text-white d-inline-flex align-items-center justify-content-center gap-2"
+                                style="background: rgba(230, 57, 70, 0.16); border: 1.5px solid rgba(230, 57, 70, 0.75); box-shadow: 0 6px 20px rgba(230, 57, 70, 0.22);">
+                                <i class="bi bi-box-arrow-in-right"></i> Sign In to Dashboard
                             </a>
                             <div class="text-center mt-2">
-                                <small class="text-muted" style="font-size: 0.72rem;">Demo: <code>demo</code> / <code>demo1234</code></small>
+                                <small class="text-muted" style="font-size: 0.74rem;">Demo: <code>demo</code> / <code>demo1234</code></small>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Option 3: Explore as Guest (Dashboard) -->
-                    <div class="col-md-4">
-                        <div class="card h-100 p-4 border-0 gateway-card"
-                            style="background: linear-gradient(160deg, #181824 0%, #10101a 100%); border: 1px solid rgba(52, 152, 219, 0.3) !important; border-radius: 18px; transition: transform 0.25s, border-color 0.25s;">
-                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(52, 152, 219, 0.15); display: flex; align-items: center; justify-content: center; color: #3498db; font-size: 1.3rem;">
-                                    <i class="bi bi-map"></i>
-                                </div>
-                                <span class="badge rounded-pill bg-primary-subtle text-info fw-semibold" style="font-size: 0.68rem; padding: 4px 8px;">PUBLIC ACCESS</span>
-                            </div>
-                            <h4 class="fw-bold text-white mb-2" style="font-size: 1.25rem;">Explore Live Dashboard</h4>
-                            <p class="text-secondary small mb-4 flex-grow-1" style="line-height: 1.6; color: #9494a8 !important;">
-                                Instant public access to the live dark geospatial risk map, 12 monitored Indian cities, 7-day hourly forecasts, and cooling shelters.
-                            </p>
-                            <a href="{% url 'dashboard' %}" class="btn btn-outline-info w-100 fw-bold py-2 rounded-3 text-white"
-                                style="border-color: rgba(52, 152, 219, 0.6); background: rgba(52, 152, 219, 0.12);">
-                                Open Dashboard Directly <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -157,8 +136,8 @@
         <div class="container">
             <div class="row g-4 text-center">
                 <div class="col-6 col-md-3">
-                    <div class="h2 fw-bold text-white mb-0" style="font-family: 'Space Grotesk', sans-serif;">{{ total_locations|default:12 }}</div>
-                    <div class="text-muted small mt-1">High-Risk Indian Cities</div>
+                    <div class="h2 fw-bold text-white mb-0" style="font-family: 'Space Grotesk', sans-serif;">{{ total_locations|default:15 }}</div>
+                    <div class="text-muted small mt-1">Monitored Global & Indian Cities</div>
                 </div>
                 <div class="col-6 col-md-3">
                     <div class="h2 fw-bold mb-0" style="font-family: 'Space Grotesk', sans-serif; color: #ff6b35;">168 hrs</div>
@@ -344,16 +323,19 @@
                     Start monitoring heat stress indices and safeguard vulnerable populations today.
                 </p>
                 <div class="d-flex flex-wrap justify-content-center gap-3">
-                    <a href="{% url 'dashboard' %}" class="btn btn-danger px-4 py-2 rounded-3 fw-bold"
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="btn btn-danger px-4 py-2 rounded-pill fw-bold"
                         style="background: linear-gradient(135deg, #e63946, #ff6b35); border: none;">
                         <i class="bi bi-grid-1x2 me-1"></i> Open Live Dashboard
                     </a>
-                    {% if not user.is_authenticated %}
-                    <a href="{% url 'signup' %}" class="btn btn-outline-light px-4 py-2 rounded-3 fw-semibold">
-                        <i class="bi bi-person-plus me-1"></i> Create Free Account
+                    {% else %}
+                    <a href="{% url 'signup' %}" class="btn px-4 py-2 rounded-pill fw-bold"
+                        style="background: linear-gradient(135deg, #ff6b35, #ffd166); border: none; color: #0a0a0f;">
+                        <i class="bi bi-rocket-takeoff-fill me-1"></i> Create Free Account
                     </a>
-                    <a href="{% url 'login' %}?next={% url 'dashboard' %}" class="btn btn-outline-secondary px-4 py-2 rounded-3 fw-semibold text-white">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                    <a href="{% url 'login' %}?next={% url 'dashboard' %}" class="btn px-4 py-2 rounded-pill fw-semibold text-white"
+                        style="background: rgba(230, 57, 70, 0.16); border: 1.5px solid rgba(230, 57, 70, 0.75);">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Sign In
                     </a>
                     {% endif %}
                 </div>

@@ -318,29 +318,48 @@ class ViewTests(TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
 
+    def test_protected_views_redirect_when_logged_out(self):
+        for url in [
+            '/dashboard/',
+            f'/location/{self.location.id}/',
+            '/calculator/',
+            '/alerts/',
+            '/safety/',
+            '/subscriptions/',
+            '/api/locations/',
+        ]:
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, 302, f'{url} did not redirect')
+
     def test_dashboard_200(self):
+        self.client.force_login(self.user)
         response = self.client.get('/dashboard/')
         self.assertEqual(response.status_code, 200)
 
     def test_location_detail_200(self):
+        self.client.force_login(self.user)
         response = self.client.get(f'/location/{self.location.id}/')
         self.assertEqual(response.status_code, 200)
 
     def test_calculator_get_200(self):
+        self.client.force_login(self.user)
         response = self.client.get('/calculator/')
         self.assertEqual(response.status_code, 200)
 
     def test_calculator_post_200(self):
+        self.client.force_login(self.user)
         response = self.client.post('/calculator/', {
             'temperature_c': 35, 'humidity': 70,
         })
         self.assertEqual(response.status_code, 200)
 
     def test_alerts_list_200(self):
+        self.client.force_login(self.user)
         response = self.client.get('/alerts/')
         self.assertEqual(response.status_code, 200)
 
     def test_safety_tips_200(self):
+        self.client.force_login(self.user)
         response = self.client.get('/safety/')
         self.assertEqual(response.status_code, 200)
 
@@ -363,11 +382,13 @@ class ViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_api_locations_json(self):
+        self.client.force_login(self.user)
         response = self.client.get('/api/locations/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
     def test_api_location_forecast_json(self):
+        self.client.force_login(self.user)
         response = self.client.get(
             f'/api/locations/{self.location.id}/forecast/'
         )
@@ -375,11 +396,13 @@ class ViewTests(TestCase):
         self.assertEqual(response['Content-Type'], 'application/json')
 
     def test_export_csv(self):
+        self.client.force_login(self.user)
         response = self.client.get(f'/location/{self.location.id}/export/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'text/csv')
 
     def test_location_404(self):
+        self.client.force_login(self.user)
         response = self.client.get('/location/99999/')
         self.assertEqual(response.status_code, 404)
 

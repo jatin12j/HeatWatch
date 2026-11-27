@@ -820,6 +820,7 @@
                         <i class="bi bi-house"></i> Home
                     </a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard' %}">
                         <i class="bi bi-grid-1x2"></i> Dashboard
@@ -840,6 +841,7 @@
                         <i class="bi bi-shield-check"></i> Safety
                     </a>
                 </li>
+                {% endif %}
             </ul>
 
             <!-- Right auth links -->
@@ -864,10 +866,16 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a href="{% url 'login' %}" class="btn-hw-outline btn-hw-sm">Login</a>
+                    <a href="{% url 'login' %}" class="btn btn-sm px-3 py-1 fw-semibold text-white d-inline-flex align-items-center gap-1"
+                        style="background: rgba(230, 57, 70, 0.12); border: 1px solid rgba(230, 57, 70, 0.55); border-radius: 50px; box-shadow: 0 0 12px rgba(230, 57, 70, 0.18);">
+                        <i class="bi bi-shield-lock-fill" style="color: #ff6b6b;"></i> Login
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url 'signup' %}" class="btn-hw-primary btn-hw-sm">Sign Up</a>
+                    <a href="{% url 'signup' %}" class="btn btn-sm px-3 py-1 fw-bold d-inline-flex align-items-center gap-1"
+                        style="background: linear-gradient(135deg, #ff6b35, #ffd166); color: #0a0a0f; border: none; border-radius: 50px; box-shadow: 0 0 15px rgba(255, 107, 53, 0.35);">
+                        <i class="bi bi-rocket-takeoff-fill"></i> Sign Up
+                    </a>
                 </li>
                 {% endif %}
             </ul>
